@@ -1,6 +1,7 @@
 package com.todoapp.todoapp1;
 
 import com.todoapp.todoapp1.model.Todo;
+import com.todoapp.todoapp1.model.TodoRepositoryMem;
 import com.todoapp.todoapp1.model.User;
 import com.todoapp.todoapp1.model.UserRepositoryMem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,13 @@ public class TodoController {
     List<Todo> todoList = new ArrayList<>();
     //List<User> userList = new ArrayList<>();
 
+   // User currentUser;
+
     List<User> userList = new ArrayList<>();
 
     @Autowired
     UserRepositoryMem userRepo = new UserRepositoryMem();
+    //TodoRepositoryMem todoRepo = new TodoRepositoryMem();
 
     public TodoController(){
         todoList.add(new Todo("HTML","Tags", new Date()));
@@ -37,6 +41,8 @@ public class TodoController {
         // model omogućuje da se lista može koristiti i prikazati u HTMLu (View) - on je spona između Controllera i View
         // držač (kontejner) svih varijabli koje kontroler proslijeđuje viewu i onda view prikazuje to na stranici
         model.addAttribute(todoList);
+       /* System.out.println(currentUser.getFname());
+        model.addAttribute(currentUser);*/
         return "employee_todo_list.html";
     }
     @GetMapping("/addNewTodo")
@@ -83,6 +89,8 @@ public class TodoController {
             return "login.html";
         }
         else {
+           // currentUser = u;
+
             if(u.getType() == 0) {
                 return "redirect:/todos";
             }
@@ -92,10 +100,22 @@ public class TodoController {
         }
     }
 
+/*    //supervisor
+    @GetMapping("/showToDosForUser")
+    public String showToDosForUser(int userId, Model model) {
+        User user = userRepo.getUserById(userId);
+        model.addAttribute(user);
+
+        // stavlja listu todoa od tog usera u model
+        // filter todos only for that user
+        model.addAttribute(todoRepo.getTodoListForUserId(userId));
+
+        return "supervisor_employee_todos.html";
+    }*/
+
+
     @GetMapping("/login")
     public String login(){
         return "login.html";
     }
-
-
 }

@@ -3,7 +3,7 @@ package com.todoapp.todoapp1.model;
 public class User {
 
     private int id;
-    static int idCounter = 0; // zašto static? inače ne radi
+    static int idCounter = 0; // static -  inače ne radi
 
     private int type = 0; // 0 - employee, 1 - supervisor
 

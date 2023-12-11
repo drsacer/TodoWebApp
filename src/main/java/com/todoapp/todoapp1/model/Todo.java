@@ -8,6 +8,8 @@ public class Todo {
     private String note;
     private Date date;
 
+    private User user;
+
     public Todo(String title, String note) {
         this.title = title;
         this.note = note;
@@ -17,6 +19,14 @@ public class Todo {
         this.title = title;
         this.note = note;
         this.date = date;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getTitle() {
