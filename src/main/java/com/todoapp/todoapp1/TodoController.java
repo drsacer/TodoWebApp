@@ -1,9 +1,6 @@
 package com.todoapp.todoapp1;
 
-import com.todoapp.todoapp1.model.Todo;
-import com.todoapp.todoapp1.model.TodoRepositoryMem;
-import com.todoapp.todoapp1.model.User;
-import com.todoapp.todoapp1.model.UserRepositoryMem;
+import com.todoapp.todoapp1.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class TodoController {
@@ -26,6 +24,10 @@ public class TodoController {
 
     @Autowired
     UserRepositoryMem userRepo = new UserRepositoryMem();
+
+    @Autowired
+    UserRepository userRepository;
+
     //TodoRepositoryMem todoRepo = new TodoRepositoryMem();
 
     public TodoController(){
@@ -67,15 +69,35 @@ public class TodoController {
     // Employees
     @GetMapping("/users")
     public String users(Model model){
-        model.addAttribute(userRepo.getUsersEmployees());
+        model.addAttribute(userRepository.findAll());
         return "employees.html";
     }
 
     @GetMapping("/addNewEmployee")
     public String users(String fname, String lname, String oib, String email, String password, Model model){
-        userRepo.getUserList().add(new User(fname, lname, oib, email, password));
-        model.addAttribute(userRepo.getUsersEmployees());
+        userRepository.save(new User(fname, lname, oib, email, password));
 
+        return "redirect:/users";
+    }
+
+    @GetMapping("/showEditEmployee")
+    public String showEditUser(int id, Model model){
+        User user = userRepository.findById(id).get();
+
+        model.addAttribute("user", user);
+
+        return "supervisor_employee_edit";
+    }
+
+    @GetMapping("/editEmployee")
+    public String editUser(int id, String fname, String lname, String oib, String email, Model model){
+        User user = userRepository.findById(id).get();
+        user.setFname(fname);
+        user.setLname(lname);
+        user.setOib(oib);
+        user.setEmail(email);
+
+        System.out.println("User " + email + " is updated.");
         return "redirect:/users";
     }
 

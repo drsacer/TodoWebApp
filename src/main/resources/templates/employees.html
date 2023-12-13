@@ -44,7 +44,7 @@
             <td th:text="${user.oib}">Primjer</td>
             <td th:text="${user.email}">Primjer</td>
             <td th:text="${user.password}">Primjer</td>
-            <td> <a th:href="@{'/delete?title='+ ${user.id}}"> Edit</a> </td>
+            <td> <a th:href="@{'/showEditEmployee?id='+ ${user.id}}"> Edit</a> </td>
             <td> <a th:href="@{'/delete?title='+ ${user.id}}"> Delete</a> </td>
             <td> <a th:href="@{'/delete?title='+ ${user.id}}"> View todos</a> </td>
         </tr>

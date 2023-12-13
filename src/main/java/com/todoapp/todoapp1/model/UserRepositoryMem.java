@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Repository
 public class UserRepositoryMem {
 
@@ -16,7 +17,6 @@ public class UserRepositoryMem {
 
         userList.add(new User("Dragan","Sačer","123","drsacer@gmail.com","1"));
         userList.add(new User("Karlo","Magdić","123","karlo@gmail.com","1"));
-        userList.add(new User("Gloria","Zdrilić","123","gloria@gmail.com","1"));
     }
 
     public List<User> getUserList() {
@@ -37,6 +37,16 @@ public class UserRepositoryMem {
         User user = null;
         for (User u : userList){
             if (u.getEmail().equals(email) && u.getPassword().equals(password)){
+                user = u;
+            }
+        }
+        return user;
+    }
+
+    public User getUserByEmail(String email){
+        User user = null;
+        for (User u : userList){
+            if (u.getEmail().equals(email)){
                 user = u;
             }
         }
