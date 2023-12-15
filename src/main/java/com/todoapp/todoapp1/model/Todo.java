@@ -1,14 +1,25 @@
 package com.todoapp.todoapp1.model;
 
+import jakarta.persistence.*;
+
 import java.util.Date;
 
+@Entity
 public class Todo {
+    @Id
+    @GeneratedValue
+    private int id;
 
     private String title;
     private String note;
     private Date date;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+
+    public Todo() {
+    }
 
     public Todo(String title, String note) {
         this.title = title;
@@ -51,5 +62,13 @@ public class Todo {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 }

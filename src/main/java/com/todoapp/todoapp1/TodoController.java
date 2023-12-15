@@ -15,61 +15,59 @@ import java.util.Optional;
 @Controller
 public class TodoController {
 
-    List<Todo> todoList = new ArrayList<>();
-    //List<User> userList = new ArrayList<>();
-
-   // User currentUser;
-
-    List<User> userList = new ArrayList<>();
-
-    @Autowired
-    UserRepositoryMem userRepo = new UserRepositoryMem();
+    User currentUser = null;
 
     @Autowired
     UserRepository userRepository;
 
-    //TodoRepositoryMem todoRepo = new TodoRepositoryMem();
+    @Autowired
+    TodoRepository todoRepository;
 
     public TodoController(){
-        todoList.add(new Todo("HTML","Tags", new Date()));
-        todoList.add(new Todo("CSS","Selectors",new Date()));
-        todoList.add(new Todo("Bootstrap","Classes", new Date()));
+
     }
 
     //TODOS
+
+    @GetMapping("/customQ")
+    public String customQ(Model model) {
+        System.out.println("Count users with type 1: " + userRepository.customCounting());
+        System.out.println("Count users with type 0: " + userRepository.countByType(0));
+
+        return "login.html";
+
+    }
 
     @GetMapping("/todos")
     public String showTodos(Model model){
         // model omogućuje da se lista može koristiti i prikazati u HTMLu (View) - on je spona između Controllera i View
         // držač (kontejner) svih varijabli koje kontroler proslijeđuje viewu i onda view prikazuje to na stranici
-        model.addAttribute(todoList);
-       /* System.out.println(currentUser.getFname());
-        model.addAttribute(currentUser);*/
+        model.addAttribute(todoRepository.findAllByUser(currentUser));
+        model.addAttribute("currentUser", currentUser);
+
         return "employee_todo_list.html";
     }
+
     @GetMapping("/addNewTodo")
     public String addNewTodo(String title, String note){
         //dodaje se klikom na button Add todo in table
-        todoList.add(new Todo(title, note, new Date()));
+        Todo newTodo = new Todo(title, note, new Date());
+        newTodo.setUser(currentUser);
+        todoRepository.save(newTodo);
         return "redirect:/todos";
     }
 
     @GetMapping("/delete")
-    public String deleteTodo(String title){
-        //iterira se po listi i briše todo po title-u
-        for (Todo todo: todoList) {
-            if(todo.getTitle().equals(title)){
-                todoList.remove(todo);
-                break;
-            }
-        }
+    public String deleteTodo(int id){
+        todoRepository.deleteById(id);
         return "redirect:/todos";
     }
 
     // Employees
+
     @GetMapping("/users")
     public String users(Model model){
-        model.addAttribute(userRepository.findAll());
+        model.addAttribute(userRepository.findAllByType(0));
         return "employees.html";
     }
 
@@ -101,17 +99,24 @@ public class TodoController {
         return "redirect:/users";
     }
 
+    @GetMapping("/deleteEmployee")
+    public String deleteEmployee(int id){
+        userRepository.deleteById(id);
+        return "redirect:/users";
+    }
+
+
     // login
     @GetMapping("/loginProcess")
     public String loginProcess(@RequestParam("email") String email, @RequestParam("password") String password, Model model){
-        User u = userRepo.getUserByEmailAndPassword(email,password);
+        User u = userRepository.findUserByEmailAndPassword(email,password);
 
         if (u == null) {
             model.addAttribute("userMessage", "User not found!");
             return "login.html";
         }
         else {
-           // currentUser = u;
+            currentUser = u;
 
             if(u.getType() == 0) {
                 return "redirect:/todos";
@@ -122,18 +127,18 @@ public class TodoController {
         }
     }
 
-/*    //supervisor
+ //supervisor
     @GetMapping("/showToDosForUser")
-    public String showToDosForUser(int userId, Model model) {
-        User user = userRepo.getUserById(userId);
+    public String showToDosForUser(int id, Model model) {
+        User user = userRepository.findById(id).get();
         model.addAttribute(user);
 
         // stavlja listu todoa od tog usera u model
         // filter todos only for that user
-        model.addAttribute(todoRepo.getTodoListForUserId(userId));
+        model.addAttribute(todoRepository.findAllByUser(user));
 
         return "supervisor_employee_todos.html";
-    }*/
+    }
 
 
     @GetMapping("/login")

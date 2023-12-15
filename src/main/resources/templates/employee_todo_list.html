@@ -17,7 +17,7 @@
 <div class="container">
     <nav class="navbar">
         <h3>ToDo App1</h3>
-        <!-- <span th:text="${currentUser.fname}"></span> -->
+        <span th:text="${currentUser.getFname()}"></span>
 
         <img src="user.png" width="45px" height="45px">
     </nav>
@@ -53,8 +53,8 @@
             <tr th:each="todo : ${todoList}">
                 <td th:text="${todo.title} ">Primjer</td>
                 <td th:text="${todo.note}">Primjer</td>
-                <td th:text="${todo.date}">Primjer</td>
-                <td> <a th:href="@{'/delete?title='+ ${todo.title}}"> Delete</a> </td>
+                <td th:text="${#dates.format(todo.date, 'dd.MM.yyyy HH:mm')}">Primjer</td>
+                <td> <a th:href="@{'/delete?id='+ ${todo.id}}">Delete</a> </td>
             </tr>
 
         </table>
